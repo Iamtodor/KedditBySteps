@@ -1,6 +1,6 @@
 @file:JvmName("TimeUtils")
 
-package com.todor.kedditbysteps.commons
+package com.todor.kedditbysteps.commons.extentions
 
 import java.util.*
 

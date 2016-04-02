@@ -1,6 +1,6 @@
 @file:JvmName("ExtensionsUtils")
 
-package com.todor.kedditbysteps.commons
+package com.todor.kedditbysteps.commons.extentions
 
 import android.text.TextUtils
 import android.view.LayoutInflater

@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar?
         setSupportActionBar(toolbar)
 
-//        if(savedInstanceState == null)
-//            changeFragment()
+        if(savedInstanceState == null)
+            changeFragment(NewsFragment())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
