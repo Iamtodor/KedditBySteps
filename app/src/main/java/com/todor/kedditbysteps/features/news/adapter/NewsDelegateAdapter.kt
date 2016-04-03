@@ -30,8 +30,7 @@ class NewsDelegateAdapter: ViewTypeDelegateAdapter {
             parent.inflate(R.layout.news_item)) {
 
         fun bind(item: RedditNewsItem) = with(itemView) {
-//            img_thumbnail.loadImg(item.thumbnail)
-            Picasso.with(context).load(item.thumbnail).error(R.mipmap.ic_launcher).into(img_thumbnail)
+            img_thumbnail.loadImg(item.thumbnail)
             description.text = item.title
             author.text = item.author
             comments.text = "${item.numComments} comments"
