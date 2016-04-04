@@ -2,7 +2,6 @@ package com.todor.kedditbysteps
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +12,10 @@ import com.todor.kedditbysteps.features.news.NewsManager
 import com.todor.kedditbysteps.features.news.adapter.NewsAdapter
 import kotlinx.android.synthetic.main.news_fragment.*
 import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 
 class NewsFragment : RxBaseFragment() {
 
+    private val LIMIT: String = "10"
     private val newsManager by lazy {
         NewsManager()
     }
@@ -40,14 +39,16 @@ class NewsFragment : RxBaseFragment() {
     private fun requestNews() {
         val subscription = newsManager.getNews()
                 .subscribeOn(Schedulers.io())
-                .subscribe(
-                {
-                    retrievedNews -> (news_list.adapter as NewsAdapter).addNews(retrievedNews)
+                .subscribe({
+                    retrievedNews ->
+                    (news_list.adapter as NewsAdapter).addNews(retrievedNews)
                 },
-                {
-                    error -> Snackbar.make(news_list, error.message ?: "", Snackbar.LENGTH_SHORT).show()
-                }
-        )
+                        {
+                            error ->
+                            Snackbar.make(news_list, error.message ?: "", Snackbar.LENGTH_SHORT).show()
+                            error.printStackTrace()
+                        }
+                )
 
         subscriptions.add(subscription)
     }

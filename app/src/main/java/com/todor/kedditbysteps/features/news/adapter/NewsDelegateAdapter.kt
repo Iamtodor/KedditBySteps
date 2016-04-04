@@ -1,11 +1,7 @@
 package com.todor.kedditbysteps.features.news.adapter
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 import com.todor.kedditbysteps.R
 import com.todor.kedditbysteps.commons.RedditNewsItem
 import com.todor.kedditbysteps.commons.adapter.ViewType
@@ -14,8 +10,9 @@ import com.todor.kedditbysteps.commons.extentions.getFriendlyTime
 import com.todor.kedditbysteps.commons.extentions.inflate
 import com.todor.kedditbysteps.commons.extentions.loadImg
 import kotlinx.android.synthetic.main.news_item.view.*
+import java.util.logging.Logger
 
-class NewsDelegateAdapter: ViewTypeDelegateAdapter {
+class NewsDelegateAdapter : ViewTypeDelegateAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return NewsViewHolder(parent)
@@ -26,7 +23,7 @@ class NewsDelegateAdapter: ViewTypeDelegateAdapter {
         holder.bind(item as RedditNewsItem)
     }
 
-    class NewsViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
+    class NewsViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
             parent.inflate(R.layout.news_item)) {
 
         fun bind(item: RedditNewsItem) = with(itemView) {
