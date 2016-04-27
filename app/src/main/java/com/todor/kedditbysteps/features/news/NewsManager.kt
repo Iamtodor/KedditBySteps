@@ -1,19 +1,17 @@
 package com.todor.kedditbysteps.features.news
 
 import com.todor.kedditbysteps.api.RestAPI
+import com.todor.kedditbysteps.api.RedditNews
 import com.todor.kedditbysteps.commons.RedditNewsItem
 import rx.Observable
 
+class NewsManager(private val api: RestAPI = RestAPI()) {
 
-class NewsManager {
-
-    private val api: RestAPI = RestAPI()
-
-    fun getNews(limit: String = "10"): Observable<List<RedditNewsItem>> {
+    fun getNews(after: String, limit: String = "10"): Observable<RedditNews> {
         return Observable.create {
             subscriber ->
-            val callResponse = api.getNews("", limit)
-            val response = callResponse.execute()
+            val callResponse = api.getNews(after, limit)
+            val response = call
 
             if (response.isSuccessful) {
                 val news = response.body().data.children.map {

@@ -6,6 +6,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.todor.kedditbysteps.api.RedditNews
+import com.todor.kedditbysteps.commons.InfiniteScrollListener
+import com.todor.kedditbysteps.commons.RedditNewsItem
 import com.todor.kedditbysteps.commons.RxBaseFragment
 import com.todor.kedditbysteps.commons.extentions.inflate
 import com.todor.kedditbysteps.features.news.NewsManager
@@ -15,6 +18,7 @@ import rx.schedulers.Schedulers
 
 class NewsFragment : RxBaseFragment() {
 
+    private var redditNews: RedditNews? = null
     private val LIMIT: String = "10"
     private val newsManager by lazy {
         NewsManager()
@@ -27,7 +31,9 @@ class NewsFragment : RxBaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         news_list.setHasFixedSize(true)
-        news_list.layoutManager = LinearLayoutManager(context)
+        val linearLayoutManager = LinearLayoutManager(context)
+        news_list.layoutManager = linearLayoutManager
+        news_list.addOnScrollListener(InfiniteScrollListener({requestNews()}, linearLayoutManager))
 
         initAdapter()
 
@@ -37,11 +43,11 @@ class NewsFragment : RxBaseFragment() {
     }
 
     private fun requestNews() {
-        val subscription = newsManager.getNews()
+        val subscription = newsManager.getNews(redditNews?.after ?: "")
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     retrievedNews ->
-                    (news_list.adapter as NewsAdapter).addNews(retrievedNews)
+                    redditNews = retrievedNews
                 },
                         {
                             error ->
