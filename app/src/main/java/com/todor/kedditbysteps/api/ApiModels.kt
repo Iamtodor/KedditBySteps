@@ -1,11 +1,11 @@
 package com.todor.kedditbysteps.api
 
-class RedditNewsResponse(val data: RedditDataNewsResponse)
+class RedditNewsResponse(val data: RedditNews)
 
 class RedditNews(
+        val children: List<RedditChildrenResponse>,
         val after: String?,
-        val before: String?,
-        val children: RedditChildrenResponse
+        val before: String?
 )
 
 class RedditChildrenResponse(

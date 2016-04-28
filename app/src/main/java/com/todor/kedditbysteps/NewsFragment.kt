@@ -6,9 +6,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.todor.kedditbysteps.api.RedditNews
+
 import com.todor.kedditbysteps.commons.InfiniteScrollListener
-import com.todor.kedditbysteps.commons.RedditNewsItem
+import com.todor.kedditbysteps.commons.RedditNews
 import com.todor.kedditbysteps.commons.RxBaseFragment
 import com.todor.kedditbysteps.commons.extentions.inflate
 import com.todor.kedditbysteps.features.news.NewsManager
@@ -33,7 +33,7 @@ class NewsFragment : RxBaseFragment() {
         news_list.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(context)
         news_list.layoutManager = linearLayoutManager
-        news_list.addOnScrollListener(InfiniteScrollListener({requestNews()}, linearLayoutManager))
+        news_list.addOnScrollListener(InfiniteScrollListener({ requestNews() }, linearLayoutManager))
 
         initAdapter()
 
@@ -48,9 +48,9 @@ class NewsFragment : RxBaseFragment() {
                 .subscribe({
                     retrievedNews ->
                     redditNews = retrievedNews
+                    (news_list.adapter as NewsAdapter).addNews(retrievedNews.news)
                 },
-                        {
-                            error ->
+                        { error ->
                             Snackbar.make(news_list, error.message ?: "", Snackbar.LENGTH_SHORT).show()
                             error.printStackTrace()
                         }
