@@ -14,6 +14,7 @@ import com.todor.kedditbysteps.commons.extentions.inflate
 import com.todor.kedditbysteps.features.news.NewsManager
 import com.todor.kedditbysteps.features.news.adapter.NewsAdapter
 import kotlinx.android.synthetic.main.news_fragment.*
+import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
 class NewsFragment : RxBaseFragment() {
@@ -46,30 +47,40 @@ class NewsFragment : RxBaseFragment() {
 
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_REDDIT_NEWS)) {
             redditNews = savedInstanceState.get(KEY_REDDIT_NEWS) as RedditNews
+            (news_list.adapter as NewsAdapter).clearAndAddNews(redditNews!!.news)
+        } else {
+            requestNews()
+        }
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val news = (news_list.adapter as NewsAdapter).getNews()
+        if(redditNews != null && news.size > 0) {
+            outState.putParcelable(KEY_REDDIT_NEWS, redditNews?.copy(news = news))
         }
     }
 
     private fun requestNews() {
         val subscription = newsManager.getNews(redditNews?.after ?: "")
                 .subscribeOn(Schedulers.io())
-                .subscribe({
-                    retrievedNews ->
-                    redditNews = retrievedNews
-                    (news_list.adapter as NewsAdapter).addNews(retrievedNews.news)
-                },
-                        { error ->
-                            Snackbar.make(news_list, error.message ?: "", Snackbar.LENGTH_SHORT).show()
-                            error.printStackTrace()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe (
+                        { retrievedNews ->
+                            redditNews = retrievedNews
+                            (news_list.adapter as NewsAdapter).addNews(retrievedNews.news)
+                        },
+                        { e ->
+                            Snackbar.make(news_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
                         }
                 )
-
         subscriptions.add(subscription)
     }
 
     private fun initAdapter() {
-        if (news_list.adapter == null)
+        if (news_list.adapter == null) {
             news_list.adapter = NewsAdapter()
+        }
     }
 }
 
