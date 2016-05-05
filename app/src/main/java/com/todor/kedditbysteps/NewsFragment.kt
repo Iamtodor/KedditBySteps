@@ -24,21 +24,29 @@ class NewsFragment : RxBaseFragment() {
         NewsManager()
     }
 
+    companion object {
+        private val KEY_REDDIT_NEWS = "redditNews"
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.news_fragment)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        news_list.setHasFixedSize(true)
-        val linearLayoutManager = LinearLayoutManager(context)
-        news_list.layoutManager = linearLayoutManager
-        news_list.addOnScrollListener(InfiniteScrollListener({ requestNews() }, linearLayoutManager))
+
+        news_list.apply {
+            setHasFixedSize(true)
+            val linearLayout = LinearLayoutManager(context)
+            layoutManager = linearLayout
+            addOnScrollListener(InfiniteScrollListener({requestNews()}, linearLayout))
+        }
 
         initAdapter()
 
-        if (savedInstanceState == null) {
-            requestNews()
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_REDDIT_NEWS)) {
+            redditNews = savedInstanceState.get(KEY_REDDIT_NEWS) as RedditNews
+
         }
     }
 
